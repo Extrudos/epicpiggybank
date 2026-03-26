@@ -66,16 +66,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Set app_metadata on the user
-    await serviceClient.auth.admin.updateUserById(authData.user.id, {
-      app_metadata: {
-        tenant_id: tenant.id,
-        role: "parent",
-        profile_id: authData.user.id,
-      },
-    });
-
-    // 5. Audit log
+    // 4. Audit log
+    // (app_metadata is synced automatically by the
+    //  sync_profile_to_auth_metadata database trigger)
     await writeAuditLog({
       tenant_id: tenant.id,
       user_id: authData.user.id,
