@@ -1,9 +1,11 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useApp } from "./providers";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
 import { useState } from "react";
@@ -28,7 +30,6 @@ const KID_NAV = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { user, isKidMode } = useApp();
   const pathname = usePathname();
-  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = user?.role === "kid" || isKidMode ? KID_NAV : PARENT_NAV;
@@ -42,6 +43,55 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
     window.location.href = "/login";
   }
+
+  const ProfilePopover = () => (
+    <Popover>
+      <PopoverTrigger>
+        <button className="flex items-center gap-3 w-full rounded-lg px-2 py-2 hover:bg-muted transition-colors text-left">
+          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary shrink-0">
+            {user?.avatarUrl || user?.displayName?.charAt(0).toUpperCase() || "?"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">{user?.displayName}</p>
+            <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground shrink-0">
+            <path d="M7 15l5-5 5 5" />
+          </svg>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent side="top" align="start" sideOffset={8} className="w-56 p-1.5">
+        {user?.role === "parent" && (
+          <>
+            <Link
+              href="/settings"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-muted transition-colors"
+            >
+              <span className="text-base">👤</span>
+              My Profile
+            </Link>
+            <Link
+              href="/switch-kid"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-muted transition-colors"
+            >
+              <span className="text-base">🔄</span>
+              Switch to Kid
+            </Link>
+            <Separator className="my-1" />
+          </>
+        )}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-muted transition-colors w-full text-left text-muted-foreground"
+        >
+          <span className="text-base">🚪</span>
+          Log Out
+        </button>
+      </PopoverContent>
+    </Popover>
+  );
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
@@ -80,32 +130,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         })}
       </nav>
 
-      {/* User section */}
-      <div className="border-t border-border/50 p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-semibold text-primary">
-            {user?.displayName?.charAt(0).toUpperCase() || "?"}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.displayName}</p>
-            <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
-          </div>
-        </div>
-        {user?.role === "parent" && (
-          <Link href="/switch-kid" onClick={() => setMobileOpen(false)}>
-            <Button variant="outline" size="sm" className="w-full mb-2">
-              🔄 Switch to Kid
-            </Button>
-          </Link>
-        )}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full text-muted-foreground"
-          onClick={handleLogout}
-        >
-          Log Out
-        </Button>
+      {/* Profile popover */}
+      <div className="border-t border-border/50 p-3">
+        <ProfilePopover />
       </div>
     </div>
   );
