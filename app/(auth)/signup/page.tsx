@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createBrowserSupabaseClient } from "@/lib/supabase";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +18,11 @@ export default function SignupPage() {
     setError(null);
 
     const form = new FormData(e.currentTarget);
+    const email = form.get("email") as string;
+    const password = form.get("password") as string;
     const data = {
-      email: form.get("email") as string,
-      password: form.get("password") as string,
+      email,
+      password,
       familyName: form.get("familyName") as string,
       displayName: form.get("displayName") as string,
     };
@@ -39,8 +40,19 @@ export default function SignupPage() {
         throw new Error(result.error || "Signup failed");
       }
 
-      router.push("/dashboard");
-      router.refresh();
+      // Sign in on the client so cookies are set in the browser
+      const supabase = createBrowserSupabaseClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        throw new Error(signInError.message);
+      }
+
+      // Hard navigate so the server sees the new auth cookies
+      window.location.href = "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

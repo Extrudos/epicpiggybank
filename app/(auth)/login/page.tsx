@@ -35,8 +35,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
-    router.refresh();
+    // Hard navigate so the server sees the new auth cookies
+    window.location.href = "/dashboard";
   }
 
   return (

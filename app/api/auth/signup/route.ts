@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { writeAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
@@ -76,11 +75,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // 5. Sign the user in
-    const supabase = await createServerSupabaseClient();
-    await supabase.auth.signInWithPassword({ email, password });
-
-    // 6. Audit log
+    // 5. Audit log
     await writeAuditLog({
       tenant_id: tenant.id,
       user_id: authData.user.id,

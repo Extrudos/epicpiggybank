@@ -40,8 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       const supabase = createBrowserSupabaseClient();
       await supabase.auth.signOut();
     }
-    router.push("/login");
-    router.refresh();
+    window.location.href = "/login";
   }
 
   const NavContent = () => (
