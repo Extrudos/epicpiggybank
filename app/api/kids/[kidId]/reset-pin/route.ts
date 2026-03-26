@@ -13,9 +13,9 @@ export async function POST(
     const { kidId } = await params;
     const { pin } = await request.json();
 
-    if (!pin || pin.length < 4 || pin.length > 6) {
+    if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
       return NextResponse.json(
-        { error: "PIN must be 4-6 digits" },
+        { error: "PIN must be exactly 4 digits" },
         { status: 400 }
       );
     }

@@ -89,8 +89,8 @@ export default function EditKidPage() {
         <CardContent>
           <form onSubmit={handleResetPin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="pin">New PIN (4-6 digits)</Label>
-              <Input id="pin" name="pin" type="password" inputMode="numeric" pattern="[0-9]{4,6}" minLength={4} maxLength={6} required />
+              <Label htmlFor="pin">New PIN (4 digits)</Label>
+              <Input id="pin" name="pin" type="password" inputMode="numeric" pattern="[0-9]{4}" minLength={4} maxLength={4} required />
             </div>
             <Button type="submit" variant="outline">Reset PIN</Button>
           </form>

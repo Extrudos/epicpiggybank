@@ -92,7 +92,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         {user?.role === "parent" && (
-          <Link href="/kid-login" onClick={() => setMobileOpen(false)}>
+          <Link href="/switch-kid" onClick={() => setMobileOpen(false)}>
             <Button variant="outline" size="sm" className="w-full mb-2">
               🔄 Switch to Kid
             </Button>

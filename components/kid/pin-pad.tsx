@@ -1,30 +1,31 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 interface PinPadProps {
   onSubmit: (pin: string) => void;
   loading?: boolean;
   error?: string | null;
-  maxLength?: number;
+  length?: number;
 }
 
-export function PinPad({ onSubmit, loading, error, maxLength = 6 }: PinPadProps) {
+export function PinPad({ onSubmit, loading, error, length = 4 }: PinPadProps) {
   const [pin, setPin] = useState("");
+
+  // Clear PIN when an error comes in so the kid can retry fresh
+  useEffect(() => {
+    if (error) setPin("");
+  }, [error]);
 
   const addDigit = useCallback(
     (digit: string) => {
       setPin((prev) => {
-        if (prev.length >= maxLength) return prev;
-        const next = prev + digit;
-        if (next.length >= 4 && next.length <= maxLength) {
-          // Auto-submit after 4+ digits when user pauses
-        }
-        return next;
+        if (prev.length >= length) return prev;
+        return prev + digit;
       });
     },
-    [maxLength]
+    [length]
   );
 
   const removeDigit = useCallback(() => {
@@ -32,18 +33,18 @@ export function PinPad({ onSubmit, loading, error, maxLength = 6 }: PinPadProps)
   }, []);
 
   const handleSubmit = useCallback(() => {
-    if (pin.length >= 4) {
+    if (pin.length === length) {
       onSubmit(pin);
     }
-  }, [pin, onSubmit]);
+  }, [pin, length, onSubmit]);
 
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
   return (
     <div className="w-full max-w-xs mx-auto">
-      {/* PIN display */}
+      {/* PIN dots */}
       <div className="flex justify-center gap-3 mb-6">
-        {Array.from({ length: maxLength }).map((_, i) => (
+        {Array.from({ length }).map((_, i) => (
           <div
             key={i}
             className={`w-4 h-4 rounded-full transition-all duration-200 ${
@@ -70,7 +71,7 @@ export function PinPad({ onSubmit, loading, error, maxLength = 6 }: PinPadProps)
             className="h-16 text-2xl font-bold rounded-2xl hover:bg-primary/10 active:scale-95 transition-transform"
             style={{ fontFamily: "var(--font-fredoka)" }}
             onClick={() => addDigit(d)}
-            disabled={loading}
+            disabled={loading || pin.length >= length}
           >
             {d}
           </Button>
@@ -88,14 +89,14 @@ export function PinPad({ onSubmit, loading, error, maxLength = 6 }: PinPadProps)
           className="h-16 text-2xl font-bold rounded-2xl hover:bg-primary/10 active:scale-95 transition-transform"
           style={{ fontFamily: "var(--font-fredoka)" }}
           onClick={() => addDigit("0")}
-          disabled={loading}
+          disabled={loading || pin.length >= length}
         >
           0
         </Button>
         <Button
           className="h-16 text-lg font-bold rounded-2xl"
           onClick={handleSubmit}
-          disabled={loading || pin.length < 4}
+          disabled={loading || pin.length < length}
         >
           {loading ? "..." : "Go"}
         </Button>

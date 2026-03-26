@@ -89,20 +89,20 @@ export function KidForm({ open, onClose, onSuccess }: KidFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="pin">PIN (4-6 digits)</Label>
+            <Label htmlFor="pin">PIN (4 digits)</Label>
             <Input
               id="pin"
               name="pin"
               type="password"
               inputMode="numeric"
-              pattern="[0-9]{4,6}"
+              pattern="[0-9]{4}"
               placeholder="••••"
               minLength={4}
-              maxLength={6}
+              maxLength={4}
               required
             />
             <p className="text-xs text-muted-foreground">
-              Your kid will use this PIN to log into their account.
+              Your kid will use this 4-digit PIN to log in.
             </p>
           </div>
 

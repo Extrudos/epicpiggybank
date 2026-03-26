@@ -20,6 +20,7 @@ export type PricingInterval = "month" | "year";
 export interface Tenant {
   id: string;
   name: string;
+  family_code: string;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   plan: Plan;
