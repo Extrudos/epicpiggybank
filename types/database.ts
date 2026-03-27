@@ -10,7 +10,8 @@ export type TransactionType =
   | "withdrawal"
   | "investment"
   | "parent_deposit"
-  | "parent_withdrawal";
+  | "parent_withdrawal"
+  | "goal_allocation";
 export type TransactionStatus = "pending" | "approved" | "rejected";
 export type AllowanceFrequency = "daily" | "weekly" | "biweekly" | "monthly";
 export type CouponType = "percent" | "fixed";
@@ -59,6 +60,7 @@ export interface Transaction {
   approved_by: string | null;
   approved_at: string | null;
   notes: string | null;
+  goal_id: string | null;
   created_at: string;
 }
 
@@ -187,4 +189,8 @@ export const DEBIT_TYPES: TransactionType[] = [
   "spending",
   "withdrawal",
   "parent_withdrawal",
+];
+
+export const GOAL_ALLOCATION_TYPES: TransactionType[] = [
+  "goal_allocation",
 ];

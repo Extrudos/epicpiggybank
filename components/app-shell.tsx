@@ -20,11 +20,11 @@ const PARENT_NAV = [
 ];
 
 const KID_NAV = [
-  { href: "/dashboard", label: "My Piggy Bank", icon: "🐷" },
-  { href: "/transactions", label: "My Money", icon: "💰" },
-  { href: "/goals", label: "Goals", icon: "🎯" },
-  { href: "/badges", label: "Badges", icon: "🏆" },
-  { href: "/collectibles", label: "Collection", icon: "✨" },
+  { href: "/dashboard", label: "My Piggy Bank", icon: "🐷", color: "var(--kid-coral)" },
+  { href: "/transactions", label: "My Money", icon: "💰", color: "var(--kid-gold)" },
+  { href: "/goals", label: "Goals", icon: "🎯", color: "var(--kid-sky)" },
+  { href: "/badges", label: "Badges", icon: "🏆", color: "var(--kid-purple)" },
+  { href: "/collectibles", label: "Collection", icon: "✨", color: "var(--kid-mint)" },
 ];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -96,12 +96,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="h-16 flex items-center px-4 border-b border-border/50">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="text-2xl">🐷</span>
+      <div className={`h-16 flex items-center px-4 ${
+        isKidMode || user?.role === "kid"
+          ? "border-b-2 border-kid-coral/20"
+          : "border-b border-border/50"
+      }`}>
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <span className={`text-2xl ${isKidMode || user?.role === "kid" ? "animate-piggy-float" : ""}`}>🐷</span>
           <span
             className="text-lg font-bold"
-            style={{ fontFamily: isKidMode || user?.role === "kid" ? "var(--font-fredoka)" : "var(--font-dm-sans)" }}
+            style={{
+              fontFamily: isKidMode || user?.role === "kid" ? "var(--font-fredoka)" : "var(--font-dm-sans)",
+              ...(isKidMode || user?.role === "kid" ? {
+                background: "linear-gradient(135deg, var(--kid-coral), var(--kid-gold))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              } : {}),
+            }}
           >
             EpicPiggyBank
           </span>
@@ -109,21 +120,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1.5">
         {navItems.map((item) => {
           const active = pathname === item.href;
+          const isKid = isKidMode || user?.role === "kid";
+          const navColor = "color" in item ? (item as { color: string }).color : undefined;
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all ${
+                isKid ? "kid-nav-item" : "rounded-lg"
+              } ${
                 active
-                  ? "bg-primary/10 text-primary"
+                  ? isKid
+                    ? "kid-nav-item active"
+                    : "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
+              style={isKid ? { fontFamily: "var(--font-fredoka)" } : undefined}
             >
-              <span className="text-lg">{item.icon}</span>
+              <span
+                className="text-xl"
+                style={isKid && !active && navColor ? {
+                  filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))",
+                } : undefined}
+              >
+                {item.icon}
+              </span>
               {item.label}
             </Link>
           );

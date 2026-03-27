@@ -12,6 +12,7 @@ const XP_REWARDS: Record<string, number> = {
   investment: 25,
   parent_deposit: 5,
   parent_withdrawal: 3,
+  goal_allocation: 10,
 };
 
 export async function awardXP(kidId: string, transactionType: string): Promise<{ newXP: number; newLevel: number; leveledUp: boolean }> {

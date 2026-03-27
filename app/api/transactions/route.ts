@@ -56,12 +56,13 @@ export async function POST(request: Request) {
     const user = await requireSession();
     const body = await request.json();
 
-    const { kidId, type, amount, description, notes } = body as {
+    const { kidId, type, amount, description, notes, goalId } = body as {
       kidId: string;
       type: TransactionType;
       amount: number;
       description?: string;
       notes?: string;
+      goalId?: string;
     };
 
     if (!kidId || !type || !amount || amount <= 0) {
@@ -96,6 +97,7 @@ export async function POST(request: Request) {
         amount,
         description: description || null,
         notes: notes || null,
+        goal_id: goalId || null,
         status: isAutoApproved ? "approved" : "pending",
         initiated_by: user.id,
         approved_by: isAutoApproved ? user.id : null,

@@ -84,6 +84,43 @@ export async function PATCH(
 
     if (error) throw error;
 
+    // If approving a deposit tagged to a goal, update goal progress
+    if (status === "approved" && old.goal_id) {
+      const { data: goal } = await supabase
+        .from("savings_goals")
+        .select("current_amount, target_amount")
+        .eq("id", old.goal_id)
+        .single();
+
+      if (goal) {
+        // Create auto-approved goal_allocation transaction
+        await supabase.from("transactions").insert({
+          tenant_id: user.tenantId,
+          kid_id: old.kid_id,
+          type: "goal_allocation",
+          amount: old.amount,
+          description: `Saved to goal`,
+          goal_id: old.goal_id,
+          status: "approved",
+          initiated_by: old.kid_id,
+          approved_by: user.id,
+          approved_at: new Date().toISOString(),
+        });
+
+        const newAmount = goal.current_amount + old.amount;
+        const isCompleted = newAmount >= goal.target_amount;
+
+        await supabase
+          .from("savings_goals")
+          .update({
+            current_amount: newAmount,
+            is_completed: isCompleted,
+            completed_at: isCompleted ? new Date().toISOString() : null,
+          })
+          .eq("id", old.goal_id);
+      }
+    }
+
     await writeAuditLog({
       tenant_id: user.tenantId,
       user_id: user.id,

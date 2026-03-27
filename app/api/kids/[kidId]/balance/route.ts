@@ -19,17 +19,21 @@ export async function GET(
 
     const { data, error } = await supabase
       .from("kid_balances")
-      .select("balance")
+      .select("balance, spendable_balance, goal_savings")
       .eq("kid_id", kidId)
       .eq("tenant_id", user.tenantId)
       .single();
 
     if (error) {
       // No transactions yet = $0 balance
-      return NextResponse.json({ balance: 0 });
+      return NextResponse.json({ balance: 0, spendable_balance: 0, goal_savings: 0 });
     }
 
-    return NextResponse.json({ balance: Number(data.balance) });
+    return NextResponse.json({
+      balance: Number(data.balance),
+      spendable_balance: Number(data.spendable_balance),
+      goal_savings: Number(data.goal_savings),
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Server error";
     return NextResponse.json({ error: message }, { status: 500 });

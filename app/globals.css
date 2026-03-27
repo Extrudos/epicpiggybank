@@ -130,6 +130,13 @@
   --input: oklch(0.92 0.03 85);
   --ring: oklch(0.7 0.18 25);
   --radius: 1rem;
+  --sidebar: oklch(0.96 0.03 50);
+  --sidebar-foreground: oklch(0.3 0.04 280);
+  --sidebar-primary: oklch(0.7 0.18 25);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.92 0.06 45);
+  --sidebar-accent-foreground: oklch(0.3 0.04 280);
+  --sidebar-border: oklch(0.9 0.05 60);
 
   --font-heading: var(--font-fredoka);
   --font-display: var(--font-fredoka);
@@ -199,4 +206,129 @@
 
 .animate-streak-flame {
   animation: streak-flame 0.8s ease-in-out infinite;
+}
+
+/* ─── Kid sidebar nav items ─── */
+[data-mode="kid"] .kid-nav-item {
+  border-radius: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+[data-mode="kid"] .kid-nav-item:hover {
+  transform: translateX(4px);
+}
+
+[data-mode="kid"] .kid-nav-item.active {
+  background: linear-gradient(135deg, var(--kid-coral), var(--kid-gold));
+  color: white;
+  box-shadow: 0 4px 14px oklch(0.7 0.18 25 / 0.3);
+}
+
+/* ─── Goal progress bar colors ─── */
+[data-mode="kid"] .goal-progress-bar {
+  background: oklch(0.92 0.04 85);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+[data-mode="kid"] .goal-progress-fill {
+  background: linear-gradient(90deg, var(--kid-sky), var(--kid-mint));
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Balance hero section ─── */
+[data-mode="kid"] .balance-hero {
+  background: linear-gradient(145deg, oklch(0.98 0.03 30), oklch(0.96 0.05 60), oklch(0.97 0.04 85));
+  border: 2px solid oklch(0.9 0.06 50);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px oklch(0.8 0.1 50 / 0.15);
+}
+
+/* ─── Colorful card borders ─── */
+[data-mode="kid"] .card-coral {
+  border: 2.5px solid var(--kid-coral);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.98 0.03 25));
+}
+
+[data-mode="kid"] .card-sky {
+  border: 2.5px solid var(--kid-sky);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.98 0.03 230));
+}
+
+[data-mode="kid"] .card-gold {
+  border: 2.5px solid var(--kid-gold);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.98 0.04 85));
+}
+
+[data-mode="kid"] .card-mint {
+  border: 2.5px solid var(--kid-mint);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.98 0.03 165));
+}
+
+[data-mode="kid"] .card-purple {
+  border: 2.5px solid var(--kid-purple);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, oklch(1 0 0), oklch(0.98 0.03 300));
+}
+
+/* ─── Confetti / celebration animation ─── */
+@keyframes goal-celebrate {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.08) rotate(-2deg); }
+  50% { transform: scale(1.12) rotate(2deg); }
+  75% { transform: scale(1.08) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+
+.animate-celebrate {
+  animation: goal-celebrate 0.6s ease-in-out;
+}
+
+/* ─── Piggy float animation ─── */
+@keyframes piggy-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-piggy-float {
+  animation: piggy-float 3s ease-in-out infinite;
+}
+
+/* ─── Kid balance sheet table ─── */
+[data-mode="kid"] .balance-sheet-table th {
+  font-family: var(--font-fredoka);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: oklch(0.5 0.03 280);
+}
+
+[data-mode="kid"] .balance-sheet-table td {
+  font-size: 0.875rem;
+}
+
+[data-mode="kid"] .balance-sheet-table tr.pending-row {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+/* ─── Toggle switch styling ─── */
+[data-mode="kid"] .balance-toggle {
+  background: oklch(0.93 0.04 85);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+[data-mode="kid"] .balance-toggle button.active {
+  background: linear-gradient(135deg, var(--kid-coral), var(--kid-gold));
+  color: white;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px oklch(0.7 0.18 25 / 0.3);
 }

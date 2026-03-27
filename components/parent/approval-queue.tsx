@@ -25,6 +25,7 @@ const TYPE_LABELS: Record<string, string> = {
   investment: "Investment",
   parent_deposit: "Deposit",
   parent_withdrawal: "Withdrawal",
+  goal_allocation: "Goal Savings",
 };
 
 export function ApprovalQueue() {

@@ -27,7 +27,7 @@ export async function GET(
     // Get balance
     const { data: balance } = await supabase
       .from("kid_balances")
-      .select("balance")
+      .select("balance, spendable_balance, goal_savings")
       .eq("kid_id", kidId)
       .single();
 
@@ -35,6 +35,8 @@ export async function GET(
       ...kid,
       pin_hash: undefined,
       balance: balance ? Number(balance.balance) : 0,
+      spendable_balance: balance ? Number(balance.spendable_balance) : 0,
+      goal_savings: balance ? Number(balance.goal_savings) : 0,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Server error";

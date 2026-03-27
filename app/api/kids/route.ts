@@ -22,16 +22,22 @@ export async function GET() {
     // Get balances for each kid
     const { data: balances } = await supabase
       .from("kid_balances")
-      .select("kid_id, balance")
+      .select("kid_id, balance, spendable_balance, goal_savings")
       .eq("tenant_id", user.tenantId);
 
     const balanceMap = new Map(
-      (balances || []).map((b) => [b.kid_id, Number(b.balance)])
+      (balances || []).map((b) => [b.kid_id, {
+        balance: Number(b.balance),
+        spendable_balance: Number(b.spendable_balance),
+        goal_savings: Number(b.goal_savings),
+      }])
     );
 
     const kids = (data || []).map((kid) => ({
       ...kid,
-      balance: balanceMap.get(kid.id) ?? 0,
+      balance: balanceMap.get(kid.id)?.balance ?? 0,
+      spendable_balance: balanceMap.get(kid.id)?.spendable_balance ?? 0,
+      goal_savings: balanceMap.get(kid.id)?.goal_savings ?? 0,
     }));
 
     return NextResponse.json(kids);

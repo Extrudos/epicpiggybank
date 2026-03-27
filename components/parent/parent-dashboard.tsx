@@ -13,6 +13,8 @@ interface KidSummary {
   display_name: string;
   avatar_url: string | null;
   balance: number;
+  spendable_balance: number;
+  goal_savings: number;
   level: number;
   streak_days: number;
   is_active: boolean;
@@ -96,12 +98,15 @@ export function ParentDashboard() {
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold truncate">{kid.display_name}</p>
                         <p className="text-2xl font-bold tracking-tight">
-                          ${kid.balance.toFixed(2)}
+                          ${kid.spendable_balance.toFixed(2)}
                         </p>
                         <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                           <span>Lvl {kid.level}</span>
                           {kid.streak_days > 0 && (
                             <span>🔥 {kid.streak_days}d streak</span>
+                          )}
+                          {kid.goal_savings > 0 && (
+                            <span>🐷 ${kid.goal_savings.toFixed(0)} saved</span>
                           )}
                         </div>
                       </div>
